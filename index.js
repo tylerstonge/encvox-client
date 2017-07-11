@@ -8,8 +8,8 @@ const socket = io('http://localhost:3000');
 
 let win;
 let key;
+let registry = {};
 
-// FIXME: split into two functions -- one for public, one for private.
 function loadOrCreateKey() {
     key = new NodeRSA();
     fs.readFile('./public.key', (err, pub) => {
@@ -33,6 +33,10 @@ function loadOrCreateKey() {
                     console.log('could not find private key, but found public key.');
                 } else {
                     key.importKey(prv, 'private');
+                    socket.emit('identify', {
+                        username: 'dropkick',
+                        publicKey: key.exportKey('public')
+                    });
                 }
             });
         }
@@ -47,7 +51,6 @@ function createWindow () {
 
     // Load or create keys
     win.webContents.on('loadKey', () => {
-        console.log('Wow lemme try');
         attemptLoadKey();
     });
 
@@ -57,16 +60,40 @@ function createWindow () {
 
     // Message from view -- encrypt and send to server
     ipcMain.on('encrypt', (event, message) => {
-        let encrypted = key.encrypt(message, 'base64');
-        socket.emit('message', encrypted);
+        for (var e in registry) {
+            if (registry.hasOwnProperty(e)) {
+                let user = registry[e];
+                let userKey = new NodeRSA();
+                userKey.importKey(user.publicKey, 'public');
+                let encrypted = userKey.encrypt(message, 'base64');
+                socket.emit('message', {
+                    recipient: user.id,
+                    message: encrypted
+                });
+            }
+        };
+    });
+
+    // Initialize the user registry
+    socket.on('current-users', (users) => {
+        registry = users;
     });
 
     // Message from server -- decrypt and pass to view
     socket.on('message', (message) => {
         let decrypted = key.decrypt(message, 'utf8');
-        console.log(decrypted);
         win.webContents.send('message', decrypted);
     });
+
+    // New user joined the server
+    socket.on('user-join', (user) => {
+        registry[user.id] = user;
+    });
+
+    // User disconnected from server
+    socket.on('user-leave', (id) => {
+        delete registry[id];
+    })
 
     // and load the index.html of the app.
     win.loadURL(url.format({

@@ -1,6 +1,9 @@
 @font-face {
     font-family: 'Raleway';
-    src: url('Raleway-Regular.ttf') format('truetype');
+    src: url('Raleway-Regular.eot?#iefix') format('embedded-opentype'),
+        url('Raleway-Regular.woff') format('woff'),
+        url('Raleway-Regular.ttf') format('truetype'),
+        url('Raleway-Regular.svg#Raleway') format('svg');
 }
 
 html, body, div { margin: 0; padding: 0; }

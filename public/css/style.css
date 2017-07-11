@@ -1,9 +1,9 @@
 @font-face {
     font-family: 'Raleway';
-    src: url('font/Raleway-Regular.ttf');
+    src: url('Raleway-Regular.ttf') format('truetype');
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, div { margin: 0; padding: 0; }
 html, body {
     font-family: 'Raleway', sans-serif;
     height: 100%;

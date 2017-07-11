@@ -16,5 +16,11 @@
     "electron": "^1.6.11",
     "node-rsa": "^0.4.2",
     "socketio": "^1.0.0"
+  },
+  "devDependencies": {
+    "semistandard": "^11.0.0"
+  },
+  "semistandard": {
+    "global": [ "$" ]
   }
 }

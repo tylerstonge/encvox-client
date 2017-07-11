@@ -3,17 +3,21 @@
 <head>
     <meta charset="utf-8" />
     <title>encVox v0.1</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+<body>
+    <div id="wrapper">
+        <div class="container">
+            <div id="messages"></div>
+        </div>
+        <div class="form">
+            <input id="msg" type="text" name="msg" />
+            <input id="btn" type="button" value="Send" />
+        </div>
+    </div>
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
     <script src="lib/jquery-3.2.1.min.js"></script>
     <script src="js/client.js"></script>
     <script>if (window.module) module = window.module;</script>
-</head>
-<body>
-    <h1>encVox</h1>
-    <form action="">
-        <input id="msg" type="text" name="msg" />
-        <input type="submit" name="send" value="send" />
-    </form>
-    <div id="messages"></div>
 </body>
 </html>

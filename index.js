@@ -9,6 +9,7 @@ const socket = io('http://localhost:3000');
 let win;
 let key;
 
+// FIXME: split into two functions -- one for public, one for private.
 function loadOrCreateKey() {
     key = new NodeRSA();
     fs.readFile('./public.key', (err, pub) => {
@@ -50,41 +51,9 @@ function createWindow () {
         attemptLoadKey();
     });
 
-    // Create menu
-    const menuTemplate = [
-        {
-            label: 'encVox',
-            submenu: [
-                {
-                    label: 'Settings',
-                    click: () => {
-                        win.loadURL(url.format({
-                            pathname: path.join(__dirname, 'public/settings.html'),
-                            protocol: 'file:',
-                            slashes: true
-                        }));
-                    }
-                },
-                {
-                    label: 'About',
-                    click: () => {
-                        win.webContents.send('ping', 'wowowowow');
-                    }
-                },
-                { type: 'separator' },
-                {
-                    label: 'Quit',
-                    click: () => {
-                        app.quit();
-                    }
-                }
-            ]
-        }
-    ];
-    const menu = Menu.buildFromTemplate(menuTemplate);
-    Menu.setApplicationMenu(menu);
+    win.setMenu(null);
 
-    win.webContents.openDevTools()
+    win.webContents.openDevTools();
 
     // Message from view -- encrypt and send to server
     ipcMain.on('encrypt', (event, message) => {

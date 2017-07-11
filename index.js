@@ -1,12 +1,54 @@
-const {app, BrowserWindow, Menu} = require('electron');
+const {app, ipcMain, BrowserWindow, Menu} = require('electron');
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
+const NodeRSA = require('node-rsa');
+const io = require('socket.io-client');
+const socket = io('http://localhost:3000');
 
 let win;
+let key;
+
+function loadOrCreateKey() {
+    key = new NodeRSA();
+    fs.readFile('./public.key', (err, pub) => {
+        if (err) {
+            // Generate key
+            key.generateKeyPair();
+
+            // Save key
+            let publicPem = key.exportKey('public');
+            fs.writeFile('./public.key', publicPem, (err) => {
+                if (err) { console.log('could export public key'); }
+            });
+            let privatePem = key.exportKey('private');
+            fs.writeFile('./private.key', privatePem, (err) => {
+                if (err) { console.log('could export private key'); }
+            });
+        } else {
+            key.importKey(pub, 'public');
+            fs.readFile('./private.key', (err, prv) => {
+                if (err) {
+                    console.log('could not find private key, but found public key.');
+                } else {
+                    key.importKey(prv, 'private');
+                }
+            });
+        }
+    });
+}
 
 function createWindow () {
     // Create the browser window.
     win = new BrowserWindow({width: 800, height: 600});
+
+    loadOrCreateKey();
+
+    // Load or create keys
+    win.webContents.on('loadKey', () => {
+        console.log('Wow lemme try');
+        attemptLoadKey();
+    });
 
     // Create menu
     const menuTemplate = [
@@ -17,7 +59,7 @@ function createWindow () {
                     label: 'Settings',
                     click: () => {
                         win.loadURL(url.format({
-                            pathname: path.join(__dirname, 'settings.html'),
+                            pathname: path.join(__dirname, 'public/settings.html'),
                             protocol: 'file:',
                             slashes: true
                         }));
@@ -26,7 +68,7 @@ function createWindow () {
                 {
                     label: 'About',
                     click: () => {
-                        console.log('Display about');
+                        win.webContents.send('ping', 'wowowowow');
                     }
                 },
                 { type: 'separator' },
@@ -42,9 +84,24 @@ function createWindow () {
     const menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
 
+    win.webContents.openDevTools()
+
+    // Message from view -- encrypt and send to server
+    ipcMain.on('encrypt', (event, message) => {
+        let encrypted = key.encrypt(message, 'base64');
+        socket.emit('message', encrypted);
+    });
+
+    // Message from server -- decrypt and pass to view
+    socket.on('message', (message) => {
+        let decrypted = key.decrypt(message, 'utf8');
+        console.log(decrypted);
+        win.webContents.send('message', decrypted);
+    });
+
     // and load the index.html of the app.
     win.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
+        pathname: path.join(__dirname, 'public/index.html'),
         protocol: 'file:',
         slashes: true
     }));

@@ -3,16 +3,18 @@
   "version": "0.0.1",
   "description": "Encrypted voice chat client",
   "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tyler St. Onge",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tylerstonge/encvox-client.git"
+  },
   "license": "ISC",
   "dependencies": {
     "electron": "^1.6.11",
+    "node-rsa": "^0.4.2",
     "socketio": "^1.0.0"
   }
 }

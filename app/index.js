@@ -9,41 +9,8 @@ const io = require('socket.io-client');
 const socket = io('http://localhost:3000');
 
 let win;
-let key;
+let key = new NodeRSA();
 let registry = {};
-
-function loadOrCreateKey () {
-  key = new NodeRSA();
-  fs.readFile('./public.key', (err, pub) => {
-    if (err) {
-      // Generate key
-      key.generateKeyPair();
-
-      // Save key
-      let publicPem = key.exportKey('public');
-      fs.writeFile('./public.key', publicPem, (err) => {
-        if (err) { console.log('could export public key'); }
-      });
-      let privatePem = key.exportKey('private');
-      fs.writeFile('./private.key', privatePem, (err) => {
-        if (err) { console.log('could export private key'); }
-      });
-    } else {
-      key.importKey(pub, 'public');
-      fs.readFile('./private.key', (err, prv) => {
-        if (err) {
-          console.log('could not find private key, but found public key.');
-        } else {
-          key.importKey(prv, 'private');
-          socket.emit('identify', {
-            username: 'dropkick',
-            publicKey: key.exportKey('public')
-          });
-        }
-      });
-    }
-  });
-}
 
 function createWindow () {
   // Create the browser window.
@@ -60,12 +27,9 @@ function createWindow () {
     for (var e in registry) {
       if (registry.hasOwnProperty(e)) {
         let user = registry[e];
-        let userKey = new NodeRSA();
-        userKey.importKey(user.publicKey, 'public');
-        let encrypted = userKey.encrypt(message, 'base64');
         socket.emit('message', {
           recipient: user.id,
-          message: encrypted
+          message: user.publicKey.encrypt(message, 'base64')
         });
       }
     }
@@ -84,7 +48,11 @@ function createWindow () {
 
   // New user joined the server
   socket.on('user-join', (user) => {
-    registry[user.id] = user;
+    registry[user.id] = {
+      id: user.id,
+      username: user.username,
+      publicKey: new NodeRSA(user.publicKey, 'public')
+    };
   });
 
   // User disconnected from server
@@ -129,3 +97,38 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+function loadOrCreateKey () {
+  fs.readFile('./public.key', (err, pub) => {
+    if (err) {
+      // Generate key
+      key.generateKeyPair();
+
+      // Save public key
+      let publicPem = key.exportKey('public');
+      fs.writeFile('./public.key', publicPem, (err) => {
+        if (err) { console.log('could export public key'); }
+      });
+
+      // Save private key
+      let privatePem = key.exportKey('private');
+      fs.writeFile('./private.key', privatePem, (err) => {
+        if (err) { console.log('could export private key'); }
+      });
+    } else {
+      key.importKey(pub, 'public');
+
+      fs.readFile('./private.key', (err, prv) => {
+        if (err) {
+          console.log('could not find private key, but found public key.');
+        } else {
+          key.importKey(prv, 'private');
+          socket.emit('identify', {
+            username: 'dropkick',
+            publicKey: key.exportKey('public')
+          });
+        }
+      });
+    }
+  });
+}

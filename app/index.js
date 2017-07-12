@@ -7,10 +7,11 @@ const fs = require('fs');
 const NodeRSA = require('node-rsa');
 const io = require('socket.io-client');
 const socket = io('http://localhost:3000');
+const Registry = require('./registry');
 
 let win;
 let key = new NodeRSA();
-let registry = {};
+let registry = new Registry();
 
 function createWindow () {
   // Create the browser window.
@@ -24,29 +25,12 @@ function createWindow () {
 
   // Message from view, encrypt and send to server
   ipcMain.on('encrypt', (event, message) => {
-    for (var id in registry) {
-      if (registry.hasOwnProperty(id)) {
-        let user = registry[id];
-        socket.emit('message', {
-          recipient: user.id,
-          message: user.publicKey.encrypt(message, 'base64')
-        });
-      }
-    }
+    registry.emitMessage(socket, message);
   });
 
   // Initialize the user registry
   socket.on('current-users', (users) => {
-    for (var id in users) {
-      if (users.hasOwnProperty(id)) {
-        let user = users[id];
-        registry[user.id] = {
-          id: user.id,
-          username: user.username,
-          publicKey: new NodeRSA(user.publicKey, 'public')
-        };
-      }
-    }
+    registry.initializeRegistry(users);
   });
 
   // Message from server, decrypt and pass to view
@@ -57,16 +41,12 @@ function createWindow () {
 
   // New user joined the server
   socket.on('user-join', (user) => {
-    registry[user.id] = {
-      id: user.id,
-      username: user.username,
-      publicKey: new NodeRSA(user.publicKey, 'public')
-    };
+    registry.addUser(user);
   });
 
   // User disconnected from server
   socket.on('user-leave', (id) => {
-    delete registry[id];
+    registry.removeUser(id);
   });
 
   // and load the index.html of the app.

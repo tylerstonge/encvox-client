@@ -1,9 +1,9 @@
 @font-face {
     font-family: 'Raleway';
-    src: url('Raleway-Regular.eot?#iefix') format('embedded-opentype'),
-        url('Raleway-Regular.woff') format('woff'),
-        url('Raleway-Regular.ttf') format('truetype'),
-        url('Raleway-Regular.svg#Raleway') format('svg');
+    src: url('font/Raleway-Regular.eot?#iefix') format('embedded-opentype'),
+        url('font/Raleway-Regular.woff') format('woff'),
+        url('font/Raleway-Regular.ttf') format('truetype'),
+        url('font/Raleway-Regular.svg') format('svg');
 }
 
 html, body, div { margin: 0; padding: 0; }
@@ -13,7 +13,7 @@ html, body {
     overflow: hidden;
 }
 
-#wrapper {
+.wrapper {
     height: 100%;
     background-color: #455A64;
     color: #212121;
@@ -21,7 +21,7 @@ html, body {
     flex-direction: column;
 }
 
-.container {
+.messages {
     padding: 5px;
     flex: 1 1 90%;
     display: flex;
@@ -31,7 +31,7 @@ html, body {
     overflow: auto;
 }
 
-#messages p {
+.message {
     margin: 7px;
     padding: 3px;
 }

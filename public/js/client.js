@@ -1,24 +1,27 @@
-$(function () {
-  const contents = require('electron').ipcRenderer;
+const contents = require('electron').ipcRenderer;
 
+function parseAndSend () {
+  contents.send('encrypt', $('#msg').val());
+  $('#msg').val('');
+}
+
+$(function () {
   $('#msg').keydown((e) => {
     var keypressed = e.keyCode || e.which;
     if (keypressed === 13) {
-      contents.send('encrypt', $('#msg').val());
-      $('#msg').val('');
+      parseAndSend();
       return false;
     }
   });
 
   $('#btn').click(() => {
-    contents.send('encrypt', $('#msg').val());
-    $('#msg').val('');
+    parseAndSend();
     return false;
   });
 
   contents.on('message', (event, msg) => {
     console.log('recv: ' + JSON.stringify(msg));
-    $('#messages').append($('<p>').text(msg));
+    $('#messages').append($('<p>', {'class': 'message'}).text(msg));
     $('.container').scrollTop($('#messages')[0].scrollHeight);
   });
 });

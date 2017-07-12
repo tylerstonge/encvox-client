@@ -10,6 +10,7 @@ const socket = io('http://localhost:3000');
 const Registry = require('./registry');
 
 let win;
+let username;
 let key = new NodeRSA();
 let registry = new Registry();
 
@@ -34,9 +35,12 @@ function createWindow () {
   });
 
   // Message from server, decrypt and pass to view
-  socket.on('message', (message) => {
-    let decrypted = key.decrypt(message, 'utf8');
-    win.webContents.send('message', decrypted);
+  socket.on('message', (m) => {
+    let decrypted = key.decrypt(m.message, 'utf8');
+    win.webContents.send('message', {
+      sender: m.sender,
+      message: decrypted
+    });
   });
 
   // New user joined the server
@@ -112,8 +116,9 @@ function loadOrCreateKey () {
           console.log('could not find private key, but found public key.');
         } else {
           key.importKey(prv, 'private');
+          username = 'dropkick' + Math.floor((Math.random() * 1000) + 1);
           socket.emit('identify', {
-            username: 'dropkick',
+            username: username,
             publicKey: key.exportKey('public')
           });
         }

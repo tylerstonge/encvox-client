@@ -4,7 +4,7 @@ let parseAndSend = () => {
   let msg = $('#msg').val();
   contents.send('encrypt', msg);
   $('#msg').val('');
-  $('#messages').append($('<p>', {'class': 'message'}).text(msg));
+  $('#messages').append($('<p>', {'class': 'message'}).text('[ me ] ' + msg));
 };
 
 $(function () {
@@ -21,9 +21,9 @@ $(function () {
     return false;
   });
 
-  contents.on('message', (event, msg) => {
-    console.log('recv: ' + JSON.stringify(msg));
-    $('#messages').append($('<p>', {'class': 'message'}).text(msg));
+  contents.on('message', (event, m) => {
+    console.log('recv: ' + JSON.stringify(m));
+    $('#messages').append($('<p>', {'class': 'message'}).text('[ ' + m.sender + ' ] ' + m.message));
     $('.container').scrollTop($('#messages')[0].scrollHeight);
   });
 });

@@ -24,9 +24,9 @@ function createWindow () {
 
   // Message from view, encrypt and send to server
   ipcMain.on('encrypt', (event, message) => {
-    for (var e in registry) {
-      if (registry.hasOwnProperty(e)) {
-        let user = registry[e];
+    for (var id in registry) {
+      if (registry.hasOwnProperty(id)) {
+        let user = registry[id];
         socket.emit('message', {
           recipient: user.id,
           message: user.publicKey.encrypt(message, 'base64')
@@ -37,7 +37,16 @@ function createWindow () {
 
   // Initialize the user registry
   socket.on('current-users', (users) => {
-    registry = users;
+    for (var id in users) {
+      if (users.hasOwnProperty(id)) {
+        let user = users[id];
+        registry[user.id] = {
+          id: user.id,
+          username: user.username,
+          publicKey: new NodeRSA(user.publicKey, 'public')
+        };
+      }
+    }
   });
 
   // Message from server, decrypt and pass to view

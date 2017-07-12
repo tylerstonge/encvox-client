@@ -55,7 +55,7 @@ function createWindow () {
 
   win.webContents.openDevTools();
 
-  // Message from view -- encrypt and send to server
+  // Message from view, encrypt and send to server
   ipcMain.on('encrypt', (event, message) => {
     for (var e in registry) {
       if (registry.hasOwnProperty(e)) {
@@ -76,7 +76,7 @@ function createWindow () {
     registry = users;
   });
 
-  // Message from server -- decrypt and pass to view
+  // Message from server, decrypt and pass to view
   socket.on('message', (message) => {
     let decrypted = key.decrypt(message, 'utf8');
     win.webContents.send('message', decrypted);
@@ -94,7 +94,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   win.loadURL(url.format({
-    pathname: path.join(__dirname, 'public/index.html'),
+    pathname: path.join(__dirname, 'view/index.html'),
     protocol: 'file:',
     slashes: true
   }));

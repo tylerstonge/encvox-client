@@ -2,16 +2,17 @@
   "name": "envox-client",
   "version": "0.0.1",
   "description": "Encrypted voice chat client",
-  "main": "index.js",
+  "main": "./app/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "./node_modules/electron/dist/electron .",
+    "lint": "./node_modules/semistandard/bin/cmd.js"
   },
   "author": "Tyler St. Onge",
   "repository": {
     "type": "git",
     "url": "https://github.com/tylerstonge/encvox-client.git"
   },
-  "license": "ISC",
+  "license": "GPL-3.0",
   "dependencies": {
     "electron": "^1.6.11",
     "node-rsa": "^0.4.2",

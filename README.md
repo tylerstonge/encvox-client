@@ -10,8 +10,7 @@ First you must have a [server](https://github.com/tylerstonge/encvox-server) to 
 
 ```
 npm install
-npm i -g electron
-electron .
+npm start
 ```
 
 ## License

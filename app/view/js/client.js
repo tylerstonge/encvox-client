@@ -1,9 +1,11 @@
 const contents = require('electron').ipcRenderer;
 
-function parseAndSend () {
-  contents.send('encrypt', $('#msg').val());
+let parseAndSend = () => {
+  let msg = $('#msg').val();
+  contents.send('encrypt', msg);
   $('#msg').val('');
-}
+  $('#messages').append($('<p>', {'class': 'message'}).text(msg));
+};
 
 $(function () {
   $('#msg').keydown((e) => {

@@ -5,7 +5,8 @@
   "main": "./app/index.js",
   "scripts": {
     "start": "./node_modules/electron/dist/electron .",
-    "lint": "./node_modules/semistandard/bin/cmd.js"
+    "lint": "./node_modules/semistandard/bin/cmd.js",
+    "test": "./node_modules/mocha/bin/mocha"
   },
   "author": "Tyler St. Onge",
   "repository": {
@@ -19,9 +20,13 @@
     "socketio": "^1.0.0"
   },
   "devDependencies": {
-    "semistandard": "^11.0.0"
+    "mocha": "^3.4.2",
+    "semistandard": "^11.0.0",
+    "should": "^11.2.1"
   },
   "semistandard": {
-    "global": [ "$" ]
+    "global": [
+      "$"
+    ]
   }
 }

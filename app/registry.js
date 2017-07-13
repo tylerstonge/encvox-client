@@ -24,6 +24,10 @@ module.exports = class Registry {
     delete this.registry[id];
   }
 
+  getUsers () {
+    return this.registry;
+  }
+
   emitMessage (socket, message) {
     for (var id in this.registry) {
       if (this.registry.hasOwnProperty(id)) {

@@ -30,7 +30,7 @@ function createWindow () {
 
   win.setMenu(null);
 
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   // Message from view, encrypt and send to server
   ipcMain.on('encrypt', (event, message) => {

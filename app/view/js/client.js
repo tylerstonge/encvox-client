@@ -16,6 +16,17 @@ $(function () {
     }
   });
 
+  $('#slider').slideReveal({
+    trigger: $('#trigger'),
+    position: 'right',
+    shown: () => {
+      $('#trigger i').addClass('rotate');
+    },
+    hidden: () => {
+      $('#trigger i').removeClass('rotate');
+    }
+  });
+
   $('#btn').click(() => {
     parseAndSend();
     return false;

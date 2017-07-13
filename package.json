@@ -6,7 +6,9 @@
   "scripts": {
     "start": "./node_modules/electron/dist/electron .",
     "lint": "./node_modules/semistandard/bin/cmd.js",
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "./node_modules/mocha/bin/mocha",
+    "cover": "istanbul cover _mocha",
+    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "author": "Tyler St. Onge",
   "repository": {
@@ -20,7 +22,10 @@
     "socketio": "^1.0.0"
   },
   "devDependencies": {
+    "coveralls": "^2.13.1",
+    "istanbul": "^0.4.5",
     "mocha": "^3.4.2",
+    "mocha-lcov-reporter": "^1.3.0",
     "semistandard": "^11.0.0",
     "should": "^11.2.1"
   },

@@ -1,4 +1,4 @@
-[![Code Climate](https://codeclimate.com/github/tylerstonge/encvox-client/badges/gpa.svg)](https://codeclimate.com/github/tylerstonge/encvox-client) [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
+[![Code Climate](https://codeclimate.com/github/tylerstonge/encvox-client/badges/gpa.svg)](https://codeclimate.com/github/tylerstonge/encvox-client) [![Build Status](https://travis-ci.org/tylerstonge/encvox-client.svg?branch=master)](https://travis-ci.org/tylerstonge/encvox-client) [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
 
 # encVox
 

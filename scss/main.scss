@@ -5,8 +5,10 @@
       url('font/Raleway-Regular.ttf') format('truetype'),
       url('font/Raleway-Regular.svg') format('svg');
 }
+@import 'lib/reset.scss';
+@import 'partials/sidebar.scss';
+@import 'partials/settings.scss';
 
-html, body, div { margin: 0; padding: 0; }
 html, body {
   font-family: 'Raleway', sans-serif;
   height: 100%;
@@ -31,27 +33,6 @@ html, body {
   overflow: auto;
 }
 
-.panel-button {
-  position: absolute;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  padding: 10px;
-  border: 1px solid #9E9E9E;
-  background-color: #9E9E9E;
-  top: 15px;
-  right: 0;
-}
-
-.panel-button:focus {
-  outline: none;
-  border-right: none;
-}
-
-.panel {
-  background-color: #9E9E9E;
-  position: relative;
-}
-
 .message {
   margin: 2px 23px 2px 7px;
   padding: 3px;
@@ -63,6 +44,12 @@ html, body {
   border: 1px solid #9E9E9E;
 }
 
+.focus:focus {
+  outline: none;
+  border-color: #BDBDBD;
+  box-shadow:0 0 5px #BDBDBD;
+}
+
 .form > input[type=text] {
   font-family: 'Raleway', sans-serif;
   background-color: #CFD8DC;
@@ -70,12 +57,6 @@ html, body {
   flex: 1 1 auto;
   border: 1px solid #9E9E9E;
   padding-left: 5px;
-}
-
-.focus:focus {
-  outline: none;
-  border-color: #BDBDBD;
-  box-shadow:0 0 5px #BDBDBD;
 }
 
 .form > input[type=button] {

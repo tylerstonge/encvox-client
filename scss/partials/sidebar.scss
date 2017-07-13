@@ -1,0 +1,19 @@
+.panel-button {
+  position: absolute;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 10px;
+  border: 1px solid #9E9E9E;
+  background-color: #9E9E9E;
+  top: 15px;
+  right: 0;
+  &:focus {
+    outline: none;
+    border-right: none;
+  }
+}
+
+.panel {
+  background-color: #9E9E9E;
+  position: relative;
+}

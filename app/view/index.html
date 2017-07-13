@@ -4,16 +4,19 @@
   <meta charset="utf-8" />
   <title>encVox v0.1</title>
   <link rel="stylesheet" href="lib/font-awesome-4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <link rel="stylesheet" type="text/css" href="css/main.css" />
 </head>
 <body>
-  <button id="trigger" class="panel-button focus"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
   <div class="wrapper">
+    <button id="trigger" class="panel-button focus"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+    <button id="settings" class="settings-button settings-main focus"><i class="fa fa-cog" aria-hidden="true"></i></button>
+    <button id="connection" class="settings-button settings-connection focus"><i class="fa fa-plug" aria-hidden="true"></i></button>
+    <button id="information" class="settings-button settings-information focus"><i class="fa fa-info" aria-hidden="true"></i></button>
     <div id="slider" class="panel">
       <h2 style="text-align:center;">encVox v0.0.1</h2>
     </div>
     <div id="messages" class="messages"></div>
-    <div class="form">
+    <div class="form focus">
       <input id="msg" class="focus" type="text" name="msg" />
       <input id="btn" class="focus" type="button" value="Send" />
     </div>

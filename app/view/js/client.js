@@ -16,6 +16,10 @@ $(function () {
     }
   });
 
+  $('#settings').click(() => {
+    window.location.href = 'settings.html';
+  });
+
   $('#slider').slideReveal({
     trigger: $('#trigger'),
     position: 'right',

@@ -3,7 +3,7 @@ const should = require('should/as-function');
 const Registry = require('../app/registry');
 const User = require('../app/user');
 
-describe('User', () => {
+describe('Registry', () => {
   describe('#constructor', () => {
     let registry = new Registry();
     it('should have a registry property', () => {

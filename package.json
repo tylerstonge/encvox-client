@@ -7,7 +7,7 @@
     "start": "./node_modules/electron/dist/electron .",
     "lint": "./node_modules/semistandard/bin/cmd.js",
     "test": "./node_modules/mocha/bin/mocha",
-    "cover": "istanbul cover _mocha",
+    "cover": "istanbul cover _mocha --include-all-sources true",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "author": "Tyler St. Onge",

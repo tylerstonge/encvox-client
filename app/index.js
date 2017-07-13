@@ -1,24 +1,32 @@
-'user strict';
+'use strict';
 
 const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
-const fs = require('fs');
-const NodeRSA = require('node-rsa');
 const io = require('socket.io-client');
 const socket = io('http://localhost:3000');
 const Registry = require('./registry');
+const RSA = require('./rsa');
 
 let win;
 let username;
-let key = new NodeRSA();
+let key;
 let registry = new Registry();
 
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({width: 800, height: 600});
 
-  loadOrCreateKey();
+  // Assign random username for now
+  username = 'dropkick' + Math.floor((Math.random() * 1000) + 1);
+
+  // Create the RSA key to be used and notify server of our public key
+  key = new RSA(() => {
+    socket.emit('identify', {
+      username: username,
+      publicKey: key.getKey().exportKey('public')
+    });
+  });
 
   win.setMenu(null);
 
@@ -36,7 +44,7 @@ function createWindow () {
 
   // Message from server, decrypt and pass to view
   socket.on('message', (m) => {
-    let decrypted = key.decrypt(m.message, 'utf8');
+    let decrypted = key.getKey().decrypt(m.message, 'utf8');
     win.webContents.send('message', {
       sender: m.sender,
       message: decrypted
@@ -90,39 +98,3 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-function loadOrCreateKey () {
-  fs.readFile('./public.key', (err, pub) => {
-    if (err) {
-      // Generate key
-      key.generateKeyPair();
-
-      // Save public key
-      let publicPem = key.exportKey('public');
-      fs.writeFile('./public.key', publicPem, (err) => {
-        if (err) { console.log('could export public key'); }
-      });
-
-      // Save private key
-      let privatePem = key.exportKey('private');
-      fs.writeFile('./private.key', privatePem, (err) => {
-        if (err) { console.log('could export private key'); }
-      });
-    } else {
-      key.importKey(pub, 'public');
-
-      fs.readFile('./private.key', (err, prv) => {
-        if (err) {
-          console.log('could not find private key, but found public key.');
-        } else {
-          key.importKey(prv, 'private');
-          username = 'dropkick' + Math.floor((Math.random() * 1000) + 1);
-          socket.emit('identify', {
-            username: username,
-            publicKey: key.exportKey('public')
-          });
-        }
-      });
-    }
-  });
-}
